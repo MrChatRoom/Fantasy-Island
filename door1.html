@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Door 1</title>
+    <link rel="stylesheet" href="door1.css">
+</head>
+<body>
+    <div class="door-screen" id="doorScreen">
+        <img src="door.gif" alt="">
+    </div>
+
+    <main class="start-screen" id="startScreen">
+        <h1 id="startText">準備はいいですか？</h1>
+        <button id="languageButton" onclick="toggleLanguage()">ENGLISH</button>
+        <button id="startButton" onclick="startGame()">開始</button>
+    </main>
+
+    <main class="game-screen" id="gameScreen">
+        <h1 id="colorText">BLUE</h1>
+
+        <div class="buttons">
+            <button class="color-button blue" onclick="pressButton('blue')" aria-label="Blue"></button>
+            <button class="color-button red" onclick="pressButton('red')" aria-label="Red"></button>
+            <button class="color-button green" onclick="pressButton('green')" aria-label="Green"></button>
+        </div>
+    </main>
+
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-text">
+            読み込み中<span class="loading-dots"></span>
+        </div>
+    </div>
+
+    <audio id="booSound" src="boo.wav" preload="auto"></audio>
+
+    <script>
+        const sequence = [
+            "blue",
+            "red",
+            "green",
+            "green",
+            "blue",
+            "red",
+            "blue",
+            "red",
+            "green",
+            "green",
+            "red",
+            "blue",
+            "blue",
+            "green",
+            "red",
+            "red",
+            "red",
+            "red",
+            "red",
+            "blue",
+            "green"
+        ];
+
+        let currentIndex = 0;
+        let gameStarted = false;
+        let colorTimer = null;
+        let timeLimit = 1200;
+        let isEnglish = false;
+
+        const doorScreen = document.getElementById("doorScreen");
+        const startScreen = document.getElementById("startScreen");
+        const gameScreen = document.getElementById("gameScreen");
+        const loadingScreen = document.getElementById("loadingScreen");
+        const colorText = document.getElementById("colorText");
+        const startText = document.getElementById("startText");
+        const startButton = document.getElementById("startButton");
+        const languageButton = document.getElementById("languageButton");
+        const booSound = document.getElementById("booSound");
+
+        setTimeout(() => {
+            doorScreen.classList.add("hidden");
+            startScreen.classList.add("active");
+        }, 1000);
+
+        function toggleLanguage() {
+            isEnglish = !isEnglish;
+
+            if (isEnglish) {
+                startText.textContent = "ARE YOU READY?";
+                startButton.textContent = "START";
+                languageButton.textContent = "日本語";
+            } else {
+                startText.textContent = "準備はいいですか？";
+                startButton.textContent = "開始";
+                languageButton.textContent = "ENGLISH";
+            }
+        }
+
+        function startGame() {
+            if (gameStarted) return;
+
+            startScreen.classList.remove("active");
+            gameScreen.classList.add("active");
+
+            currentIndex = 0;
+            timeLimit = 1200;
+            gameStarted = true;
+
+            showNextColor();
+        }
+
+        function showNextColor() {
+            if (!gameStarted) return;
+
+            colorText.textContent = sequence[currentIndex].toUpperCase();
+
+            clearTimeout(colorTimer);
+
+            colorTimer = setTimeout(() => {
+                failGame();
+            }, timeLimit);
+        }
+
+        function pressButton(color) {
+            if (!gameStarted) return;
+
+            if (color === sequence[currentIndex]) {
+                clearTimeout(colorTimer);
+
+                currentIndex++;
+
+                if (currentIndex >= sequence.length) {
+                    finishGame();
+                    return;
+                }
+
+                timeLimit = Math.max(800, 2000 - currentIndex * 55);
+
+                showNextColor();
+            } else {
+                failGame();
+            }
+        }
+
+        function failGame() {
+            if (!gameStarted) return;
+
+            gameStarted = false;
+            clearTimeout(colorTimer);
+
+            gameScreen.classList.remove("active");
+
+            booSound.currentTime = 0;
+            booSound.volume = 1;
+            booSound.play().catch(() => {});
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 1700);
+        }
+
+        function finishGame() {
+            gameStarted = false;
+            clearTimeout(colorTimer);
+
+            gameScreen.classList.remove("active");
+            loadingScreen.classList.add("active");
+
+            const loadingTime = Math.floor(Math.random() * 8001) + 5000;
+
+            setTimeout(() => {
+                window.location.href = "congrats.html";
+            }, loadingTime);
+        }
+    </script>
+</body>
+</html>
