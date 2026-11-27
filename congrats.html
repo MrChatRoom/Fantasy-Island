@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanks for Playing</title>
+    <link rel="stylesheet" href="congrats.css">
+</head>
+<body>
+    <main class="encounter">
+        <button class="language-button" id="languageButton" onclick="switchLanguage()">ENGLISH ♡</button>
+
+        <div class="character">
+            <img src="Yumeka.png" alt="Yumeka">
+        </div>
+
+        <div class="dialogue">
+            <div class="nameplate" id="characterName">ゆめか</div>
+            <p id="dialogueText">プレイしてくれてありがとう！</p>
+        </div>
+    </main>
+
+    <script>
+        let language = "ja";
+
+        function switchLanguage() {
+            language = language === "ja" ? "en" : "ja";
+
+            document.getElementById("characterName").textContent =
+                language === "en" ? "Yumeka" : "ゆめか";
+
+            document.getElementById("languageButton").textContent =
+                language === "en" ? "日本語 ♡" : "ENGLISH ♡";
+
+            document.getElementById("dialogueText").textContent =
+                language === "en" ? "Thanks for playing!" : "プレイしてくれてありがとう！";
+        }
+    </script>
+</body>
+</html>
