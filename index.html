@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ふぁんたじーさいと</title>
+    <link rel="stylesheet" href="FantasySite.css">
+</head>
+<body>
+    <main class="island" id="mainPage">
+        <header>
+            <h1 id="title">ふぁんしーあいらんど</h1>
+            <p id="subtitle">ふ ぁ ん た じ ー ・ わ ー る ど</p>
+            <button class="language" onclick="switchLanguage()">ENGLISH ♡</button>
+        </header>
+
+        <div class="welcome">
+            <h2 id="welcome">ゆめのしまへようこそ！</h2>
+            <p id="welcomeSub">ここはふしぎでかわいいせかい...</p>
+        </div>
+
+        <div class="main-image">
+            <div class="moon">☾</div>
+            <div class="stars">✦　✧　⋆　✦　⋆　✧</div>
+            <div class="portal" onclick="enterPortal()">
+                <span>♡</span>
+            </div>
+            <p id="portalText">とびらをクリックしてね！</p>
+        </div>
+
+        <footer>
+            <p id="footerText">✧ ちいさなゆめのせかいへようこそ ✧</p>
+            <p>ふぁんたじーさいと © 2026</p>
+        </footer>
+    </main>
+
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <p id="loadingText">読み込み中</p>
+            <div class="dots">
+                <span>.</span>
+                <span>.</span>
+                <span>.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let japanese = true;
+        let loadingTimer;
+
+        function switchLanguage() {
+            japanese = !japanese;
+
+            const translations = {
+                title: ["ふぁんしーあいらんど", "Fancy Island"],
+                subtitle: ["ふ ぁ ん た じ ー ・ わ ー る ど", "F A N T A S Y  W O R L D"],
+                welcome: ["ゆめのしまへようこそ！", "Welcome to Fantasy Island!"],
+                welcomeSub: ["ここはふしぎでかわいいせかい...", "A mysterious and lovely little world..."],
+                portalText: ["とびらをクリックしてね！", "Click the door to enter!"],
+                footerText: ["✧ ちいさなゆめのせかいへようこそ ✧", "✧ Welcome to my little fantasy world ✧"]
+            };
+
+            for (const id in translations) {
+                document.getElementById(id).textContent = translations[id][japanese ? 0 : 1];
+            }
+
+            document.getElementById("loadingText").textContent = japanese ? "読み込み中" : "Loading";
+            document.documentElement.lang = japanese ? "ja" : "en";
+            document.querySelector(".language").textContent = japanese ? "ENGLISH ♡" : "日本語 ♡";
+        }
+
+        function enterPortal() {
+            if (document.getElementById("loadingScreen").classList.contains("active")) return;
+
+            document.getElementById("mainPage").style.display = "none";
+            document.getElementById("loadingScreen").classList.add("active");
+
+            const randomTime = Math.floor(Math.random() * 8000) + 5000;
+
+            loadingTimer = setTimeout(() => {
+                window.location.href = "YumekaEncounter.html";
+            }, randomTime);
+        }
+    </script>
+</body>
+</html>
